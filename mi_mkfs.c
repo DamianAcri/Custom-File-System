@@ -1,3 +1,5 @@
+#include "bloques.h"
+
 int main(int argc, char **argv){
   if (argc != 3) {
         fprintf(stderr, "Uso: %s <nombre_dispositivo> <nbloques>\n", argv[0]);
@@ -35,3 +37,4 @@ int main(int argc, char **argv){
 
     return EXITO;
 }
+
