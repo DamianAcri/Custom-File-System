@@ -17,6 +17,7 @@ int bumount(){
         perror("Error al hacer el close")
         return -1;
     }
+
     return 0;
 }
 
@@ -38,5 +39,17 @@ int bwrite(unsigned int nbloque, const void *buf) {
 }
 
  int bread(unsigned int nbloque, void *buf) {
-    
+    off_t offset = nbloque * BLOCKSIZE;
+    if (lseek(descriptor, offset, SEEK_SET) == -1) {
+        perror("Error en lseek (bread)");
+        return FALLO;
+    }
+
+    int bytes_leidos = read(descriptor, buf, BLOCKSIZE);
+    if (bytes_leidos == -1) {
+        perror("Error en read");
+        return FALLO;
+    }
+
+    return bytes_leidos;
 }
