@@ -45,7 +45,7 @@ int bwrite(unsigned int nbloque, const void *buf) {
         return FALLO;
     }
 
-    int bytes_leidos = read(descriptor, buf, BLOCKSIZE);
+    size_t leidos = read(descriptor, buf, BLOCKSIZE);
     if (bytes_leidos == -1) {
         perror("Error en read");
         return FALLO;
