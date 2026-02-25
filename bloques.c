@@ -2,6 +2,7 @@
 static int descriptor = 0;
 
 int bmount(const char *camino){  
+   umask(0000);
    descriptor= open(camino,O_RDWR | O_CREAT,0666);
    if(descriptor == -1){
     perror("Error al abrir el archivo");
