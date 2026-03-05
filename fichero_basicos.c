@@ -81,23 +81,36 @@ int initMB() {
 
     return EXITO;
 }
+int initAI() {
 
-int initAI(){
-struct inodo inodos [BLOCKSIZE/INODOSIZE];
-contInodos := SB.posPrimerInodoLibre + 1;  //si hemos inicializado SB.posPrimerInodoLibre = 0
-para (i = SB.posPrimerBloqueAI; i <= SB.posUltimoBloqueAI; i++) hacer //para cada bloque del AI
-    leer el bloque de inodos i  en el dispositivo virtual
-    para (j = 0; j < BLOCKSIZE / INODOSIZE;  j++) hacer  //para cada inodo del bloque
-       inodos[j].tipo := ‘l’;  //libre
-       si (contInodos < SB.totInodos) entonces  //si no hemos llegado al último inodo del AI
-               inodos[j].punterosDirectos[0] := contInodos;  //enlazamos con el siguiente
-               contInodos++;
-        si_no //hemos llegado al último inodo
-              inodos[j].punterosDirectos[0] := UINT_MAX;
-               //hay que salir del bucle, el último bloque no tiene por qué estar completo !!!
-        fsi
-   fpara
-   escribir el bloque de inodos i  en el dispositivo virtual
-fpara
+    struct superbloque SB;
+    bread(posSB, &SB);
 
+    struct inodo inodos[BLOCKSIZE / INODOSIZE];
+
+    unsigned int contInodos = SB.posPrimerInodoLibre + 1;
+
+    for (int i = SB.posPrimerBloqueAI;
+         i <= SB.posUltimoBloqueAI;
+         i++) {
+
+        bread(i, inodos);
+
+        for (int j = 0; j < BLOCKSIZE / INODOSIZE; j++) {
+
+            inodos[j].tipo = 'l';
+
+            if (contInodos < SB.totInodos) {
+                inodos[j].punterosDirectos[0] = contInodos;
+                contInodos++;
+            } else {
+                inodos[j].punterosDirectos[0] = UINT_MAX;
+                break;
+            }
+        }
+
+        bwrite(i, inodos);
+    }
+
+    return EXITO;
 }
